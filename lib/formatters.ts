@@ -1,0 +1,23 @@
+export function formatTokenAmount(amount: number): string {
+  const billion = 1_000_000_000;
+  const million = 1_000_000;
+  const thousand = 1_000;
+
+  if (amount >= billion) {
+    return `${(amount / billion).toFixed(2)}B`;
+  } else if (amount >= million) {
+    return `${(amount / million).toFixed(2)}M`;
+  } else if (amount >= thousand) {
+    return `${(amount / thousand).toFixed(2)}K`;
+  }
+  return amount.toFixed(2);
+}
+
+export function calculatePercentage(amount: number, total: number): string {
+  if (total === 0) return "0";
+  return ((amount / total) * 100).toFixed(2);
+}
+
+export function shortenAddress(address: string, chars = 4): string {
+  return `${address.slice(0, chars)}...${address.slice(-chars)}`;
+}

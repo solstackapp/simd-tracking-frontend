@@ -1,0 +1,285 @@
+openapi: 3.0.3
+info:
+  title: SIMD Tracker API
+  description: API for tracking Solana Improvement Documents (SIMDs) voting data
+  version: 1.0.0
+  contact:
+    name: API Support
+    
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+  - url: https://api.example.com/api
+    description: Production server
+
+paths:
+  /simds:
+    get:
+      summary: List all SIMDs
+      description: Returns a list of all SIMDs with their current status
+      operationId: listSimds
+      tags:
+        - SIMDs
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SimdSummary'
+              example:
+                - title: "SIMD-0096"
+                  description: "Reward full priority fee to validator"
+                  status: "Ended"
+                  starting_epoch: 617
+                  ending_epoch: 620
+                - title: "SIMD-0123"
+                  description: "Proposal for an In-Protocol Distribution of Block Rewards to Stakers"
+                  status: "Ended"
+                  starting_epoch: 753
+                  ending_epoch: 755
+
+  /simd/{title}:
+    get:
+      summary: Get SIMD details
+      description: Returns detailed information about a specific SIMD including vote counts and token supply
+      operationId: getSimdDetails
+      tags:
+        - SIMDs
+      parameters:
+        - name: title
+          in: path
+          required: true
+          description: The SIMD title (e.g., SIMD-0096)
+          schema:
+            type: string
+            example: "SIMD-0096"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimdDetails'
+              example:
+                title: "SIMD-0096"
+                description: "Reward full priority fee to validator"
+                status: "Ended"
+                votes:
+                  yes: 142520577720854810
+                  no: 40272078263044428
+                  abstain: 7302549409816122
+                starting_epoch: 617
+                ending_epoch: 620
+                total_supply: 368296676892441024
+                unused_tokens: 178201471498725664
+        '404':
+          description: SIMD not found
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<!DOCTYPE html><html>...</html>"
+
+  /simd/{title}/validators:
+    get:
+      summary: Get validator votes for a SIMD
+      description: Returns aggregated validator voting data for a specific SIMD
+      operationId: getValidatorVotes
+      tags:
+        - Validators
+      parameters:
+        - name: title
+          in: path
+          required: true
+          description: The SIMD title (e.g., SIMD-0096)
+          schema:
+            type: string
+            example: "SIMD-0096"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ValidatorVote'
+              example:
+                - validator: "DWvDTSh3qfn88UoQTEKRV2JnLt5jtJAVoiCo3ivtMwXP"
+                  yes_amount: 0
+                  no_amount: 0
+                  abstain_amount: 6857332201379205
+                  total_amount: 6857332201379205
+                  transaction_count: 1
+                - validator: "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM"
+                  yes_amount: 5322169980396692
+                  no_amount: 0
+                  abstain_amount: 0
+                  total_amount: 5322169980396692
+                  transaction_count: 1
+        '404':
+          description: SIMD not found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                example: []
+
+components:
+  schemas:
+    SimdStatus:
+      type: string
+      enum:
+        - Upcoming
+        - Active
+        - Ended
+      description: The current status of the SIMD based on epoch timing
+
+    VoteCount:
+      type: object
+      properties:
+        yes:
+          type: integer
+          format: int64
+          description: Total tokens voted YES
+          example: 142520577720854810
+        no:
+          type: integer
+          format: int64
+          description: Total tokens voted NO
+          example: 40272078263044428
+        abstain:
+          type: integer
+          format: int64
+          description: Total tokens voted ABSTAIN
+          example: 7302549409816122
+      required:
+        - yes
+        - no
+        - abstain
+
+    SimdSummary:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The SIMD identifier
+          example: "SIMD-0096"
+        description:
+          type: string
+          description: Brief description of the SIMD proposal
+          example: "Reward full priority fee to validator"
+        status:
+          $ref: '#/components/schemas/SimdStatus'
+        starting_epoch:
+          type: integer
+          format: int64
+          description: Epoch when voting starts
+          example: 617
+        ending_epoch:
+          type: integer
+          format: int64
+          description: Epoch when voting ends
+          example: 620
+      required:
+        - title
+        - description
+        - status
+        - starting_epoch
+        - ending_epoch
+
+    SimdDetails:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The SIMD identifier
+          example: "SIMD-0096"
+        description:
+          type: string
+          description: Brief description of the SIMD proposal
+          example: "Reward full priority fee to validator"
+        status:
+          $ref: '#/components/schemas/SimdStatus'
+        votes:
+          $ref: '#/components/schemas/VoteCount'
+        starting_epoch:
+          type: integer
+          format: int64
+          description: Epoch when voting starts
+          example: 617
+        ending_epoch:
+          type: integer
+          format: int64
+          description: Epoch when voting ends
+          example: 620
+        total_supply:
+          type: integer
+          format: int64
+          description: Total amount of voting tokens minted for this SIMD
+          example: 368296676892441024
+        unused_tokens:
+          type: integer
+          format: int64
+          description: Amount of tokens not used in voting (total_supply - total_voted)
+          example: 178201471498725664
+      required:
+        - title
+        - description
+        - status
+        - votes
+        - starting_epoch
+        - ending_epoch
+        - total_supply
+        - unused_tokens
+
+    ValidatorVote:
+      type: object
+      properties:
+        validator:
+          type: string
+          description: The validator's public key address
+          example: "DWvDTSh3qfn88UoQTEKRV2JnLt5jtJAVoiCo3ivtMwXP"
+        yes_amount:
+          type: integer
+          format: int64
+          description: Amount of tokens this validator voted YES with
+          example: 0
+        no_amount:
+          type: integer
+          format: int64
+          description: Amount of tokens this validator voted NO with
+          example: 0
+        abstain_amount:
+          type: integer
+          format: int64
+          description: Amount of tokens this validator voted ABSTAIN with
+          example: 6857332201379205
+        total_amount:
+          type: integer
+          format: int64
+          description: Total amount of tokens voted by this validator (sum of all vote types)
+          example: 6857332201379205
+        transaction_count:
+          type: integer
+          format: int32
+          description: Number of voting transactions made by this validator
+          example: 1
+      required:
+        - validator
+        - yes_amount
+        - no_amount
+        - abstain_amount
+        - total_amount
+        - transaction_count
+
+tags:
+  - name: SIMDs
+    description: Operations related to SIMD proposals
+  - name: Validators
+    description: Operations related to validator voting data
