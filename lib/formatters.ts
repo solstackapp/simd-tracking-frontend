@@ -23,6 +23,19 @@ export function shortenAddress(address: string, startChars = 4, endChars?: numbe
   return `${address.slice(0, startChars)}...${address.slice(-end)}`;
 }
 
+export function formatSolAmount(lamports: number): string {
+  const LAMPORTS_PER_SOL = 1_000_000_000;
+  const sol = lamports / LAMPORTS_PER_SOL;
+  
+  // Format with commas and appropriate decimal places
+  if (sol >= 1000000) {
+    return `${(sol / 1000000).toFixed(2)}M SOL`;
+  } else if (sol >= 1000) {
+    return `${(sol / 1000).toFixed(2)}K SOL`;
+  }
+  return `${sol.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} SOL`;
+}
+
 export function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

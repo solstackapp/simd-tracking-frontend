@@ -8,7 +8,7 @@ import { SimdStatusBadge } from "@/components/simd/SimdStatusBadge";
 import { SimdSelector } from "@/components/simd/SimdSelector";
 import { ArrowLeft, Download } from "lucide-react";
 import { VoteProgressBar } from "@/components/simd/VoteProgressBar";
-import { formatTokenAmount } from "@/lib/formatters";
+import { formatTokenAmount, formatSolAmount } from "@/lib/formatters";
 import { getProposalStatus, getVotingStats } from "@/lib/voting";
 
 export default function SimdDetailPage() {
@@ -122,15 +122,15 @@ export default function SimdDetailPage() {
             </div>
             <div>
               <p className="text-xs text-gray-600 dark:text-zinc-500 uppercase tracking-wider">Total Voted</p>
-              <p className="text-xl font-semibold font-mono">{formatTokenAmount(totalVoted)}</p>
+              <p className="text-xl font-semibold font-mono">{formatSolAmount(totalVoted)}</p>
             </div>
             <div>
               <p className="text-xs text-gray-600 dark:text-zinc-500 uppercase tracking-wider">Yes Votes</p>
-              <p className="text-xl font-semibold text-green-600 dark:text-green-500">{formatTokenAmount(details.votes.yes)}</p>
+              <p className="text-xl font-semibold text-green-600 dark:text-green-500">{formatSolAmount(details.votes.yes)}</p>
             </div>
             <div>
               <p className="text-xs text-gray-600 dark:text-zinc-500 uppercase tracking-wider">No Votes</p>
-              <p className="text-xl font-semibold text-red-600 dark:text-red-500">{formatTokenAmount(details.votes.no)}</p>
+              <p className="text-xl font-semibold text-red-600 dark:text-red-500">{formatSolAmount(details.votes.no)}</p>
             </div>
             <div>
               <p className="text-xs text-gray-600 dark:text-zinc-500 uppercase tracking-wider">Epochs</p>
@@ -179,9 +179,9 @@ export default function SimdDetailPage() {
                   <div className="w-3 h-3 bg-green-500 rounded-full" />
                   <span className="text-sm text-gray-600 dark:text-zinc-400">Yes</span>
                 </div>
-                <p className="text-lg font-semibold">{formatTokenAmount(details.votes.yes)}</p>
+                <p className="text-lg font-semibold">{formatSolAmount(details.votes.yes)}</p>
                 <p className="text-xs text-gray-500 dark:text-zinc-500">
-                  {totalVoted > 0 ? ((details.votes.yes / totalVoted) * 100).toFixed(1) : "0"}%
+                  {details.total_supply > 0 ? ((details.votes.yes / details.total_supply) * 100).toFixed(1) : "0"}%
                 </p>
               </div>
               <div className="bg-gray-100 dark:bg-zinc-800/50 rounded-lg p-3">
@@ -189,9 +189,9 @@ export default function SimdDetailPage() {
                   <div className="w-3 h-3 bg-red-500 rounded-full" />
                   <span className="text-sm text-gray-600 dark:text-zinc-400">No</span>
                 </div>
-                <p className="text-lg font-semibold">{formatTokenAmount(details.votes.no)}</p>
+                <p className="text-lg font-semibold">{formatSolAmount(details.votes.no)}</p>
                 <p className="text-xs text-gray-500 dark:text-zinc-500">
-                  {totalVoted > 0 ? ((details.votes.no / totalVoted) * 100).toFixed(1) : "0"}%
+                  {details.total_supply > 0 ? ((details.votes.no / details.total_supply) * 100).toFixed(1) : "0"}%
                 </p>
               </div>
               <div className="bg-gray-100 dark:bg-zinc-800/50 rounded-lg p-3">
@@ -199,9 +199,9 @@ export default function SimdDetailPage() {
                   <div className="w-3 h-3 bg-yellow-500 rounded-full" />
                   <span className="text-sm text-gray-600 dark:text-zinc-400">Abstain</span>
                 </div>
-                <p className="text-lg font-semibold">{formatTokenAmount(details.votes.abstain)}</p>
+                <p className="text-lg font-semibold">{formatSolAmount(details.votes.abstain)}</p>
                 <p className="text-xs text-gray-500 dark:text-zinc-500">
-                  {totalVoted > 0 ? ((details.votes.abstain / totalVoted) * 100).toFixed(1) : "0"}%
+                  {details.total_supply > 0 ? ((details.votes.abstain / details.total_supply) * 100).toFixed(1) : "0"}%
                 </p>
               </div>
               <div className="bg-gray-100 dark:bg-zinc-800/50 rounded-lg p-3">
@@ -209,7 +209,7 @@ export default function SimdDetailPage() {
                   <div className="w-3 h-3 bg-gray-200 dark:bg-zinc-800 rounded-full" />
                   <span className="text-sm text-gray-600 dark:text-zinc-400">Did Not Vote</span>
                 </div>
-                <p className="text-lg font-semibold">{formatTokenAmount(details.unused_tokens)}</p>
+                <p className="text-lg font-semibold">{formatSolAmount(details.unused_tokens)}</p>
                 <p className="text-xs text-gray-500 dark:text-zinc-500">
                   {details.total_supply > 0 ? ((details.unused_tokens / details.total_supply) * 100).toFixed(1) : "0"}%
                 </p>
