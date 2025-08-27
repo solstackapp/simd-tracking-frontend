@@ -3,70 +3,77 @@
 import Link from "next/link";
 import { SimdSummary, SimdDetails } from "@/lib/api/types";
 import { SimdStatusBadge } from "./SimdStatusBadge";
+import { VoteProgressBar } from "./VoteProgressBar";
 import { useSimdDetails } from "@/lib/api/hooks";
-import { calculatePercentage, formatTokenAmount } from "@/lib/formatters";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Clock, Users } from "lucide-react";
 
 interface SimdCardProps {
   simd: SimdSummary;
+  index?: number;
 }
 
-export function SimdCard({ simd }: SimdCardProps) {
+export function SimdCard({ simd, index = 0 }: SimdCardProps) {
   const { data: details } = useSimdDetails(simd.title);
 
-  const getVotePercentages = (details: SimdDetails | undefined) => {
-    if (!details) return null;
-    
+  const getParticipationRate = (details: SimdDetails | undefined) => {
+    if (!details || details.total_supply === 0) return 0;
     const totalVoted = details.votes.yes + details.votes.no + details.votes.abstain;
-    if (totalVoted === 0) return null;
-    
-    return {
-      yes: calculatePercentage(details.votes.yes, totalVoted),
-      no: calculatePercentage(details.votes.no, totalVoted),
-      abstain: calculatePercentage(details.votes.abstain, totalVoted),
-    };
+    return (totalVoted / details.total_supply) * 100;
   };
 
-  const percentages = getVotePercentages(details);
+  const participationRate = getParticipationRate(details);
 
   return (
     <Link
       href={`/simd/${simd.title}`}
-      className="block bg-card hover:bg-secondary/50 border border-border rounded-lg p-6 transition-all hover:shadow-lg"
+      className="block bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-900/80 border border-gray-200 dark:border-zinc-800 hover:border-gray-300 dark:hover:border-zinc-700 rounded-lg p-6 transition-all duration-200 shadow-sm hover:shadow-md dark:shadow-none"
     >
-      <div className="flex items-start justify-between mb-4">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <h3 className="text-lg font-semibold">{simd.title}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+              {simd.title}
+            </h3>
             <SimdStatusBadge status={simd.status} />
           </div>
-          <p className="text-muted-foreground text-sm">{simd.description}</p>
+          <p className="text-gray-600 dark:text-zinc-400 text-sm line-clamp-1">
+            {simd.description}
+          </p>
         </div>
-        <ChevronRight className="w-5 h-5 text-muted-foreground mt-1" />
+        <ChevronRight className="w-5 h-5 text-gray-400 dark:text-zinc-600 mt-1" />
       </div>
 
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <div>
-          Epochs: {simd.starting_epoch} - {simd.ending_epoch}
+      {/* Progress Bar */}
+      {details && simd.status !== "Upcoming" && (
+        <div className="mb-3">
+          <VoteProgressBar details={details} compact />
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center gap-4 text-gray-500 dark:text-zinc-500">
+          <span className="flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            Epochs {simd.starting_epoch} - {simd.ending_epoch}
+          </span>
+          {participationRate > 0 && (
+            <span className="flex items-center gap-1">
+              <Users className="w-3 h-3" />
+              {participationRate.toFixed(1)}%
+            </span>
+          )}
         </div>
         
-        {percentages && (
-          <div className="flex items-center gap-4">
-            <span className="text-green-500">Yes: {percentages.yes}%</span>
-            <span className="text-red-500">No: {percentages.no}%</span>
-            <span className="text-gray-500">Abstain: {percentages.abstain}%</span>
+        {/* Status indicator */}
+        {simd.status === "Active" && (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-green-500 rounded-full" />
+            <span className="text-xs text-green-500">Live</span>
           </div>
         )}
       </div>
-      
-      {details && simd.status !== "Upcoming" && (
-        <div className="mt-4 pt-4 border-t border-border">
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Total Voted: {formatTokenAmount(details.votes.yes + details.votes.no + details.votes.abstain)}</span>
-            <span>Total Supply: {formatTokenAmount(details.total_supply)}</span>
-          </div>
-        </div>
-      )}
     </Link>
   );
 }

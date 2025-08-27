@@ -72,30 +72,30 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 240 15% 4%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 240 12% 6%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    --primary: 263 90% 62%; /* Solana Purple #9945FF */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 8% 12%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
+    --muted: 240 6% 20%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --accent: 162 90% 52%; /* Solana Green #14F195 */
+    --accent-foreground: 240 10% 3.9%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --border: 240 6% 15%;
+    --input: 240 6% 15%;
+    --ring: 263 90% 62%;
+    --chart-1: 162 90% 52%; /* Green */
+    --chart-2: 0 84% 60%; /* Red */
+    --chart-3: 240 5% 64%; /* Gray */
+    --chart-4: 240 10% 20%; /* Dark Gray */
+    --chart-5: 263 90% 62%; /* Purple */
   }
 }
 
@@ -108,6 +108,28 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Minimal gradient for brand text only */
+  .text-gradient-brand {
+    @apply bg-gradient-to-r from-purple-500 to-purple-400 bg-clip-text text-transparent;
+  }
+  
+  /* Subtle card effect */
+  .card-subtle {
+    @apply bg-zinc-900 border border-zinc-800;
+  }
+  
+  /* Professional shadow */
+  .shadow-subtle {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+  
+  /* Data table styles */
+  .data-cell {
+    @apply font-mono text-sm;
   }
 }
 

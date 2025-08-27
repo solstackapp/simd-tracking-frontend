@@ -3,7 +3,8 @@
 import { useState, useMemo } from "react";
 import { ValidatorVote } from "@/lib/api/types";
 import { formatTokenAmount, shortenAddress } from "@/lib/formatters";
-import { Search, Copy, ChevronUp, ChevronDown } from "lucide-react";
+import { Search, Copy, ChevronUp, ChevronDown, CheckCircle, XCircle, MinusCircle } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface ValidatorTableProps {
   validators: ValidatorVote[];
@@ -40,6 +41,14 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
   const copyToClipboard = (address: string) => {
     navigator.clipboard.writeText(address);
     setCopiedAddress(address);
+    toast.success("Address copied to clipboard!", {
+      duration: 2000,
+      style: {
+        background: "hsl(var(--card))",
+        color: "hsl(var(--foreground))",
+        border: "1px solid hsl(var(--border))",
+      },
+    });
     setTimeout(() => setCopiedAddress(null), 2000);
   };
 
@@ -100,7 +109,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
     <div>
       <div className="mb-6">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-zinc-500" />
           <input
             type="text"
             placeholder="Search validator address..."
@@ -109,17 +118,17 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
               setSearchTerm(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-10 pr-4 py-2 bg-secondary/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-800 rounded-lg focus:outline-none focus:border-purple-500/50 transition-colors text-gray-900 dark:text-white"
           />
         </div>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-zinc-800">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-border">
+            <tr className="border-b border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900">
               <th
-                className="text-left py-3 px-4 cursor-pointer hover:bg-secondary/30 transition-colors"
+                className="text-left py-3 px-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
                 onClick={() => handleSort("validator")}
               >
                 <div className="flex items-center gap-2">
@@ -128,7 +137,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                 </div>
               </th>
               <th
-                className="text-left py-3 px-4 cursor-pointer hover:bg-secondary/30 transition-colors"
+                className="text-left py-3 px-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
                 onClick={() => handleSort("vote")}
               >
                 <div className="flex items-center gap-2">
@@ -137,7 +146,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                 </div>
               </th>
               <th
-                className="text-right py-3 px-4 cursor-pointer hover:bg-secondary/30 transition-colors"
+                className="text-right py-3 px-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
                 onClick={() => handleSort("amount")}
               >
                 <div className="flex items-center justify-end gap-2">
@@ -149,7 +158,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
             </tr>
           </thead>
           <tbody>
-            {paginatedValidators.map((validator) => {
+            {paginatedValidators.map((validator, index) => {
               const voteType = getVoteType(validator);
               const voteColorClass =
                 voteType === "Yes"
@@ -163,7 +172,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
               return (
                 <tr
                   key={validator.validator}
-                  className="border-b border-border/50 hover:bg-secondary/20 transition-colors"
+                  className="border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-colors"
                 >
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
@@ -172,10 +181,10 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                       </span>
                       <button
                         onClick={() => copyToClipboard(validator.validator)}
-                        className="p-1 hover:bg-secondary rounded transition-colors"
+                        className="p-1 hover:bg-gray-200 dark:hover:bg-zinc-800 rounded transition-colors"
                         title="Copy address"
                       >
-                        <Copy className="w-3 h-3" />
+                        <Copy className="w-3 h-3 text-gray-500 dark:text-zinc-500" />
                       </button>
                       {copiedAddress === validator.validator && (
                         <span className="text-xs text-green-500">Copied!</span>
@@ -183,9 +192,14 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <span className={`font-medium ${voteColorClass}`}>
-                      {voteType}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {voteType === "Yes" && <CheckCircle className="w-4 h-4 text-green-500" />}
+                      {voteType === "No" && <XCircle className="w-4 h-4 text-red-500" />}
+                      {voteType === "Abstain" && <MinusCircle className="w-4 h-4 text-gray-500" />}
+                      <span className={`font-medium ${voteColorClass}`}>
+                        {voteType}
+                      </span>
+                    </div>
                   </td>
                   <td className="py-3 px-4 text-right font-mono text-sm">
                     {formatTokenAmount(validator.total_amount)}
@@ -202,7 +216,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
 
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-gray-600 dark:text-zinc-500">
             Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
             {Math.min(currentPage * itemsPerPage, filteredAndSortedValidators.length)} of{" "}
             {filteredAndSortedValidators.length} validators
@@ -211,14 +225,14 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
             <button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded-lg bg-secondary hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1 rounded-lg bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-300 dark:border-zinc-800 text-gray-700 dark:text-white"
             >
               First
             </button>
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded-lg bg-secondary hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1 rounded-lg bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-300 dark:border-zinc-800 text-gray-700 dark:text-white"
             >
               Previous
             </button>
@@ -228,14 +242,14 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded-lg bg-secondary hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1 rounded-lg bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-300 dark:border-zinc-800 text-gray-700 dark:text-white"
             >
               Next
             </button>
             <button
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded-lg bg-secondary hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-1 rounded-lg bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border border-gray-300 dark:border-zinc-800 text-gray-700 dark:text-white"
             >
               Last
             </button>

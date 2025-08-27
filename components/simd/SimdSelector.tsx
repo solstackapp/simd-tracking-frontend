@@ -24,7 +24,7 @@ export function SimdSelector({ currentSimd }: SimdSelectorProps) {
       <div className="relative inline-block">
         <select 
           disabled
-          className="appearance-none bg-secondary/50 text-foreground pl-4 pr-10 py-2 rounded-lg cursor-not-allowed opacity-50"
+          className="appearance-none bg-gray-100 dark:bg-zinc-900 text-gray-400 dark:text-zinc-400 pl-4 pr-10 py-2 rounded-lg cursor-not-allowed opacity-50 border border-gray-300 dark:border-zinc-800"
         >
           <option>Loading...</option>
         </select>
@@ -34,12 +34,12 @@ export function SimdSelector({ currentSimd }: SimdSelectorProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground hidden sm:inline">Switch to:</span>
+      <span className="text-sm text-gray-600 dark:text-zinc-500 hidden sm:inline">Switch to:</span>
       <div className="relative">
         <select
           value={currentSimd}
           onChange={handleSimdChange}
-          className="appearance-none bg-card hover:bg-secondary/70 text-foreground font-medium pl-4 pr-10 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:bg-secondary cursor-pointer transition-colors min-w-[180px] sm:min-w-[220px]"
+          className="appearance-none bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-800 text-gray-900 dark:text-white pl-4 pr-10 py-2 rounded-lg border border-gray-300 dark:border-zinc-800 focus:outline-none focus:border-purple-500/50 cursor-pointer transition-colors min-w-[180px] sm:min-w-[220px]"
         >
           <option value="" disabled>Select a SIMD</option>
           {simds.map((simd) => (
@@ -48,7 +48,7 @@ export function SimdSelector({ currentSimd }: SimdSelectorProps) {
             </option>
           ))}
         </select>
-        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-muted-foreground" />
+        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 dark:text-zinc-500" />
       </div>
     </div>
   );
