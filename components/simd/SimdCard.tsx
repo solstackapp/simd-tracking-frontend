@@ -5,6 +5,7 @@ import { SimdSummary, SimdDetails } from "@/lib/api/types";
 import { SimdStatusBadge } from "./SimdStatusBadge";
 import { VoteProgressBar } from "./VoteProgressBar";
 import { useSimdDetails } from "@/lib/api/hooks";
+import { getProposalStatus } from "@/lib/voting";
 import { ChevronRight, Clock, Users } from "lucide-react";
 
 interface SimdCardProps {
@@ -22,6 +23,7 @@ export function SimdCard({ simd, index = 0 }: SimdCardProps) {
   };
 
   const participationRate = getParticipationRate(details);
+  const displayStatus = details ? getProposalStatus(details) : simd.status;
 
   return (
     <Link
@@ -35,7 +37,7 @@ export function SimdCard({ simd, index = 0 }: SimdCardProps) {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
               {simd.title}
             </h3>
-            <SimdStatusBadge status={simd.status} />
+            <SimdStatusBadge status={displayStatus} />
           </div>
           <p className="text-gray-600 dark:text-zinc-400 text-sm line-clamp-1">
             {simd.description}

@@ -75,56 +75,49 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm border-b border-gray-200 dark:border-zinc-800">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-zinc-300">
-                Dashboard
-              </h1>
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950">      
+      <div className="container mx-auto px-4 py-8">
+        {/* Page Header with Title and Actions */}
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
+              <p className="text-sm text-gray-600 dark:text-zinc-400 mt-1">Track voting status and validator participation</p>
             </div>
-            <div className="flex items-center gap-3">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-zinc-500" />
-                <input
-                  type="text"
-                  placeholder="Search SIMDs..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-800 rounded-lg focus:outline-none focus:border-purple-500/50 transition-colors w-64 text-sm text-gray-900 dark:text-white"
-                />
-              </div>
-              
-              {/* Export */}
-              <button
-                onClick={exportData}
-                className="p-2 text-gray-600 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white transition-colors"
-                title="Export data"
-              >
-                <Download className="w-4 h-4" />
-              </button>
+            <button
+              onClick={exportData}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-zinc-700 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+              title="Export filtered SIMDs data"
+            >
+              <Download className="w-4 h-4" />
+              <span>Export</span>
+            </button>
+          </div>
+          
+          {/* Search and Filters Bar */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div className="flex items-center gap-4">
+              <SimdStatusFilter value={statusFilter} onChange={setStatusFilter} />
+              <span className="text-sm text-gray-600 dark:text-zinc-500">
+                {filteredSimds.length} of {simds?.length || 0} SIMDs
+              </span>
+            </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-zinc-500" />
+              <input
+                type="text"
+                placeholder="Search SIMDs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 py-2 bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-800 rounded-lg focus:outline-none focus:border-purple-500/50 transition-colors w-64 text-sm text-gray-900 dark:text-white"
+              />
             </div>
           </div>
         </div>
-      </header>
-      
-      <div className="container mx-auto px-4 py-8">
+
         {simds && (
           <DashboardStats simds={simds} details={simdDetails} />
         )}
-        
-        {/* Filters */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <SimdStatusFilter value={statusFilter} onChange={setStatusFilter} />
-            <span className="text-sm text-gray-600 dark:text-zinc-500">
-              {filteredSimds.length} of {simds?.length || 0} SIMDs
-            </span>
-          </div>
-        </div>
 
         {simds && <SimdList simds={filteredSimds} />}
       </div>

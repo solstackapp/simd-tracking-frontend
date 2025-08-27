@@ -1,4 +1,5 @@
 export type SimdStatus = "Upcoming" | "Active" | "Ended";
+export type DisplayStatus = SimdStatus | "Passed" | "Failed";
 export type VoteType = "yes" | "no" | "abstain";
 
 export interface VoteCount {

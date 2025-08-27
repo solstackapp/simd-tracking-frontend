@@ -39,7 +39,7 @@ export function VoteProgressBar({ details, compact = false }: VoteProgressBarPro
           />
           <div
             style={{ width: `${abstainPercent}%` }}
-            className="h-full bg-gray-400 dark:bg-zinc-600"
+            className="h-full bg-yellow-500 dark:bg-yellow-600"
             title={`Abstain: ${abstainPercent.toFixed(1)}%`}
           />
         </div>
@@ -56,7 +56,7 @@ export function VoteProgressBar({ details, compact = false }: VoteProgressBarPro
               No {noPercent.toFixed(1)}%
             </span>
             <span className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-zinc-600" />
+              <div className="w-2 h-2 rounded-full bg-yellow-500" />
               Abstain {abstainPercent.toFixed(1)}%
             </span>
           </div>

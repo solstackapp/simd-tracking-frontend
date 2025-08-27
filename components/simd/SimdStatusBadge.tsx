@@ -1,8 +1,8 @@
-import { SimdStatus } from "@/lib/api/types";
+import { DisplayStatus } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
 interface SimdStatusBadgeProps {
-  status: SimdStatus;
+  status: DisplayStatus;
 }
 
 export function SimdStatusBadge({ status }: SimdStatusBadgeProps) {
@@ -19,6 +19,18 @@ export function SimdStatusBadge({ status }: SimdStatusBadgeProps) {
           bg: "bg-blue-100 dark:bg-blue-500/10",
           text: "text-blue-700 dark:text-blue-500",
           border: "border-blue-300 dark:border-blue-500/20",
+        };
+      case "Passed":
+        return {
+          bg: "bg-emerald-100 dark:bg-emerald-500/10",
+          text: "text-emerald-700 dark:text-emerald-500",
+          border: "border-emerald-300 dark:border-emerald-500/20",
+        };
+      case "Failed":
+        return {
+          bg: "bg-red-100 dark:bg-red-500/10",
+          text: "text-red-700 dark:text-red-500",
+          border: "border-red-300 dark:border-red-500/20",
         };
       case "Ended":
         return {

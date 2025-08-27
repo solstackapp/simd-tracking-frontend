@@ -163,7 +163,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                   : voteType === "No"
                   ? "text-red-500"
                   : voteType === "Abstain"
-                  ? "text-gray-500"
+                  ? "text-yellow-500"
                   : "text-muted-foreground";
 
               return (
@@ -192,7 +192,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                     <div className="flex items-center gap-2">
                       {voteType === "Yes" && <CheckCircle className="w-4 h-4 text-green-500" />}
                       {voteType === "No" && <XCircle className="w-4 h-4 text-red-500" />}
-                      {voteType === "Abstain" && <MinusCircle className="w-4 h-4 text-gray-500" />}
+                      {voteType === "Abstain" && <MinusCircle className="w-4 h-4 text-yellow-500" />}
                       <span className={`font-medium ${voteColorClass}`}>
                         {voteType}
                       </span>
