@@ -18,8 +18,9 @@ export function calculatePercentage(amount: number, total: number): string {
   return ((amount / total) * 100).toFixed(2);
 }
 
-export function shortenAddress(address: string, chars = 4): string {
-  return `${address.slice(0, chars)}...${address.slice(-chars)}`;
+export function shortenAddress(address: string, startChars = 4, endChars?: number): string {
+  const end = endChars ?? startChars;
+  return `${address.slice(0, startChars)}...${address.slice(-end)}`;
 }
 
 export function capitalizeFirstLetter(string: string) {

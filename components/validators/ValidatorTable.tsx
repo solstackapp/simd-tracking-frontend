@@ -174,7 +174,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sm">
-                        {shortenAddress(validator.validator, 6)}
+                        {shortenAddress(validator.validator, 8, 4)}
                       </span>
                       <button
                         onClick={() => copyToClipboard(validator.validator)}
