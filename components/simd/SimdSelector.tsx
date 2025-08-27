@@ -43,7 +43,7 @@ export function SimdSelector({ currentSimd }: SimdSelectorProps) {
         >
           <option value="" disabled>Select a SIMD</option>
           {simds.map((simd) => (
-            <option key={simd.title} value={simd.title}>
+            <option key={simd.id} value={simd.id}>
               {simd.title} - {simd.status}
             </option>
           ))}

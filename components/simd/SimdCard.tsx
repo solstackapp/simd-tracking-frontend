@@ -13,7 +13,7 @@ interface SimdCardProps {
 }
 
 export function SimdCard({ simd, index = 0 }: SimdCardProps) {
-  const { data: details } = useSimdDetails(simd.title);
+  const { data: details } = useSimdDetails(simd.id);
 
   const getParticipationRate = (details: SimdDetails | undefined) => {
     if (!details || details.total_supply === 0) return 0;
@@ -25,7 +25,7 @@ export function SimdCard({ simd, index = 0 }: SimdCardProps) {
 
   return (
     <Link
-      href={`/simd/${simd.title}`}
+      href={`/simd/${simd.id}`}
       className="block bg-white dark:bg-zinc-900 hover:bg-gray-50 dark:hover:bg-zinc-900/80 border border-gray-200 dark:border-zinc-800 hover:border-gray-300 dark:hover:border-zinc-700 rounded-lg p-6 transition-all duration-200 shadow-sm hover:shadow-md dark:shadow-none"
     >
       {/* Header */}

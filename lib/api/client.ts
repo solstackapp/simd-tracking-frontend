@@ -7,15 +7,15 @@ const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK_DATA !== "false";
 async function fetchFromAPI<T>(endpoint: string): Promise<T> {
   if (USE_MOCK_DATA) {
     // Return mock data based on endpoint
-    if (endpoint === "/simds") {
+    if (endpoint === "/simd/all") {
       return mockSimdList as T;
     }
     
     // Check validators endpoint FIRST (more specific)
     const validatorMatch = endpoint.match(/^\/simd\/(.+)\/validators$/);
     if (validatorMatch) {
-      const title = decodeURIComponent(validatorMatch[1]);
-      const validators = mockValidatorVotes[title];
+      const id = decodeURIComponent(validatorMatch[1]);
+      const validators = mockValidatorVotes[id];
       if (!validators) {
         return [] as T;
       }
@@ -25,10 +25,10 @@ async function fetchFromAPI<T>(endpoint: string): Promise<T> {
     // Then check SIMD detail endpoint (less specific)
     const simdDetailMatch = endpoint.match(/^\/simd\/([^\/]+)$/);
     if (simdDetailMatch) {
-      const title = simdDetailMatch[1];
-      const details = mockSimdDetails[title];
+      const id = simdDetailMatch[1];
+      const details = mockSimdDetails[id];
       if (!details) {
-        throw new Error(`SIMD ${title} not found`);
+        throw new Error(`SIMD ${id} not found`);
       }
       return details as T;
     }
@@ -54,14 +54,14 @@ async function fetchFromAPI<T>(endpoint: string): Promise<T> {
 
 export const api = {
   getSimds: async (): Promise<SimdSummary[]> => {
-    return fetchFromAPI<SimdSummary[]>("/simds");
+    return fetchFromAPI<SimdSummary[]>("/simd/all");
   },
   
-  getSimdDetails: async (title: string): Promise<SimdDetails> => {
-    return fetchFromAPI<SimdDetails>(`/simd/${title}`);
+  getSimdDetails: async (id: string): Promise<SimdDetails> => {
+    return fetchFromAPI<SimdDetails>(`/simd/${id}`);
   },
   
-  getValidatorVotes: async (title: string): Promise<ValidatorVote[]> => {
-    return fetchFromAPI<ValidatorVote[]>(`/simd/${title}/validators`);
+  getValidatorVotes: async (id: string): Promise<ValidatorVote[]> => {
+    return fetchFromAPI<ValidatorVote[]>(`/simd/${id}/validators`);
   },
 };

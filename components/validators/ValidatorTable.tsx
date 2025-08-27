@@ -2,8 +2,8 @@
 
 import { useState, useMemo } from "react";
 import { ValidatorVote } from "@/lib/api/types";
-import { formatTokenAmount, shortenAddress } from "@/lib/formatters";
-import { Search, Copy, ChevronUp, ChevronDown, CheckCircle, XCircle, MinusCircle } from "lucide-react";
+import {capitalizeFirstLetter, formatTokenAmount, shortenAddress} from "@/lib/formatters";
+import { Search, Copy, ChevronUp, ChevronDown, CheckCircle, XCircle, MinusCircle, ExternalLink } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface ValidatorTableProps {
@@ -23,10 +23,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
   const itemsPerPage = 50;
 
   const getVoteType = (vote: ValidatorVote): string => {
-    if (vote.yes_amount > 0) return "Yes";
-    if (vote.no_amount > 0) return "No";
-    if (vote.abstain_amount > 0) return "Abstain";
-    return "No Vote";
+    return capitalizeFirstLetter(vote.vote_type);
   };
 
   const handleSort = (field: SortField) => {
@@ -70,8 +67,8 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
           bValue = getVoteType(b);
           break;
         case "amount":
-          aValue = a.total_amount;
-          bValue = b.total_amount;
+          aValue = a.amount;
+          bValue = b.amount;
           break;
         default:
           return 0;
@@ -171,7 +168,7 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
 
               return (
                 <tr
-                  key={validator.validator}
+                  key={`${validator.validator}-${index}`}
                   className="border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-colors"
                 >
                   <td className="py-3 px-4">
@@ -202,10 +199,21 @@ export function ValidatorTable({ validators }: ValidatorTableProps) {
                     </div>
                   </td>
                   <td className="py-3 px-4 text-right font-mono text-sm">
-                    {formatTokenAmount(validator.total_amount)}
+                    {formatTokenAmount(validator.amount)}
                   </td>
                   <td className="py-3 px-4 text-right">
-                    {validator.transaction_count}
+                    <a
+                      href={`https://solscan.io/tx/${validator.signature}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-end gap-1 text-gray-500 hover:text-purple-500 dark:text-zinc-500 dark:hover:text-purple-400 transition-colors"
+                      title="View on Solscan"
+                    >
+                      <span className="font-mono text-sm">
+                        {validator.signature.slice(0, 6)}...{validator.signature.slice(-4)}
+                      </span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
                   </td>
                 </tr>
               );

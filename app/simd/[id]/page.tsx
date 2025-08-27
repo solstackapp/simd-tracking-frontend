@@ -3,8 +3,6 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSimdDetails, useValidatorVotes } from "@/lib/api/hooks";
-import { VoteDonutChart } from "@/components/simd/VoteDonutChart";
-import { VoteMetrics } from "@/components/simd/VoteMetrics";
 import { ValidatorTable } from "@/components/validators/ValidatorTable";
 import { SimdStatusBadge } from "@/components/simd/SimdStatusBadge";
 import { SimdSelector } from "@/components/simd/SimdSelector";
@@ -14,10 +12,10 @@ import { formatTokenAmount } from "@/lib/formatters";
 
 export default function SimdDetailPage() {
   const params = useParams();
-  const title = decodeURIComponent(params.title as string);
+  const id = decodeURIComponent(params.id as string);
   
-  const { data: details, isLoading: detailsLoading, error: detailsError } = useSimdDetails(title);
-  const { data: validators, isLoading: validatorsLoading } = useValidatorVotes(title);
+  const { data: details, isLoading: detailsLoading, error: detailsError } = useSimdDetails(id);
+  const { data: validators, isLoading: validatorsLoading } = useValidatorVotes(id);
 
   if (detailsLoading) {
     return (

@@ -10,22 +10,22 @@ export const useSimds = () => {
   });
 };
 
-export const useSimdDetails = (title: string) => {
+export const useSimdDetails = (id: string) => {
   return useQuery({
-    queryKey: ["simd", title],
-    queryFn: () => api.getSimdDetails(title),
+    queryKey: ["simd", id],
+    queryFn: () => api.getSimdDetails(id),
     staleTime: 60000, // 1 minute
     refetchOnWindowFocus: true,
-    enabled: !!title,
+    enabled: !!id,
   });
 };
 
-export const useValidatorVotes = (title: string) => {
+export const useValidatorVotes = (id: string) => {
   return useQuery({
-    queryKey: ["validators", title],
-    queryFn: () => api.getValidatorVotes(title),
+    queryKey: ["validators", id],
+    queryFn: () => api.getValidatorVotes(id),
     staleTime: 60000, // 1 minute
     refetchOnWindowFocus: true,
-    enabled: !!title,
+    enabled: !!id,
   });
 };

@@ -1,4 +1,5 @@
 export type SimdStatus = "Upcoming" | "Active" | "Ended";
+export type VoteType = "yes" | "no" | "abstain";
 
 export interface VoteCount {
   yes: number;
@@ -7,6 +8,7 @@ export interface VoteCount {
 }
 
 export interface SimdSummary {
+  id: string;
   title: string;
   description: string;
   status: SimdStatus;
@@ -15,6 +17,7 @@ export interface SimdSummary {
 }
 
 export interface SimdDetails {
+  id: string;
   title: string;
   description: string;
   status: SimdStatus;
@@ -27,9 +30,7 @@ export interface SimdDetails {
 
 export interface ValidatorVote {
   validator: string;
-  yes_amount: number;
-  no_amount: number;
-  abstain_amount: number;
-  total_amount: number;
-  transaction_count: number;
+  vote_type: VoteType;
+  amount: number;
+  signature: string;
 }

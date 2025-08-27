@@ -18,8 +18,8 @@ export default function HomePage() {
   // Fetch details for all SIMDs to calculate stats
   const detailQueries = useQueries({
     queries: (simds || []).map((simd) => ({
-      queryKey: ["simd", simd.title],
-      queryFn: () => api.getSimdDetails(simd.title),
+      queryKey: ["simd", simd.id],
+      queryFn: () => api.getSimdDetails(simd.id),
       staleTime: 60000,
     })),
   });
@@ -28,7 +28,7 @@ export default function HomePage() {
     const details: Record<string, any> = {};
     detailQueries.forEach((query, index) => {
       if (simds && query.data) {
-        details[simds[index].title] = query.data;
+        details[simds[index].id] = query.data;
       }
     });
     return details;
