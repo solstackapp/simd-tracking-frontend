@@ -50,7 +50,7 @@ export default function SimdDetailPage() {
 
   const totalVoted = details.votes.yes + details.votes.no + details.votes.abstain;
   const participationRate = details.total_supply > 0 
-    ? ((totalVoted / details.total_supply) * 100).toFixed(1)
+    ? ((totalVoted / details.total_supply) * 100).toFixed(2)
     : "0";
   
   const displayStatus = getProposalStatus(details);
